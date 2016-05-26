@@ -1,12 +1,58 @@
 <html>
     
-    <head></head>
+    <head>
+        <link href="style.css" type="text/css" rel="stylesheet" />
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    </head>
     
     
      
     <body>
-        
-    <h1>Ejs Rendering The Home Page</h1>
+        <div class="container-fluid">
+          
+            
+            
+            
+           <div class="header col-md-8 col-md-offset-2">
+               <h1 class="text-center">Free Code Camp Voting App<</h1>
+               
+               <% if (auth === "yes") { %>
+               <ul class="nav nav-pills">
+                   <li role="presentation" class="active"> <a href="#">Home</a></li>
+                   <li role="presentation"><a href="#">Profile</a></li>
+                   <li role="presentation"><a href="#">New Poll</a></li>
+               
+               
+               </ul>
+              <% } else { %>
+               
+               <ul class="nav nav-pills">
+                   <li role="presentation" class="active"> <a href="#">Home</a></li>
+                   <li role="presentation"><a href="#">Login</a></li>
+               </ul>
+             <% } %>
+
+               
+               
+            </div> <!-- end header -->
+
+            <div class="main col-md-8 col-md-offset-2">
+                <h3 class="text-center">Check out the Polls Below and Cast your Vote!</h3>
+                <% for (var i in polls) { %>
+                <div class="plist"><%= polls[i] %></div>
+               <% } %>
+
+            </div>
+    
+    
+        </div> <!-- end fluid container -->
     
     </body>
 

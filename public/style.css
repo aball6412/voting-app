@@ -1,0 +1,19 @@
+body {
+
+
+}
+
+.header {
+    border: solid;
+    margin: 25px;
+}
+
+.main {
+    border: solid;
+    margin: 25px;
+}
+
+.plist {
+    border: solid;
+    margin: 10px;
+}

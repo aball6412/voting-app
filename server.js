@@ -23,7 +23,7 @@ MongoClient.connect(dburl, function(err, db) {
 
 
 //Serve up static files
-//app.use("/", express.static(__dirname + "/public"));
+app.use("/", express.static(__dirname + "/public"));
 
 
 app.set("view engine", "ejs");
@@ -35,9 +35,18 @@ app.set("view engine", "ejs");
 
 app.get("/", function(request, response) {
     
+    // Variables needed, auth, user {name: }, polls []
     //Do work
     
-    response.render("index");
+    var data = 
+        {
+            auth: "no",
+            user: { name: "Aaron" },
+            polls: ["test1", "test2", "test3", "test4", "test5"]
+        };
+    
+
+    response.render("index", data);
     
 });
 
@@ -46,7 +55,16 @@ app.get("/poll", function(request, response) {
     
     //Do work
     
-    response.render("poll");
+    var data = 
+        {
+            auth: "no",
+            voted: "no",
+            poll: "Poll Name",
+            results: []
+        }
+   
+    
+    response.render("poll", data);
     
 });
 
@@ -55,7 +73,13 @@ app.get("/user", function(request, response) {
     
    //Do work
     
-    response.render("user");
+     var data = 
+        {
+            auth: "no",
+            mypolls: ["mypoll1", "mypoll2", "mypoll3", "mypoll4", "mypoll5", "mypoll6"]
+        };
+     
+    response.render("user", data);
     
 });
 
@@ -64,7 +88,12 @@ app.get("/newpoll", function(request, response) {
     
     //Maybe build this in on top of other pages. Ex: a popup window where you can build the poll
     
-    response.render("newpoll");
+    var data = 
+        {
+            auth: "no",
+        };
+    
+    response.render("newpoll", data);
     
 });
 
