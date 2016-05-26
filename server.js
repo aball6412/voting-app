@@ -42,7 +42,7 @@ app.get("/", function(request, response) {
         {
             auth: "no",
             user: { name: "Aaron" },
-            polls: ["test1", "test2", "test3", "test4", "test5"]
+            all_polls: ["test1", "test2", "test3", "test4", "test5"]
         };
     
 
@@ -59,10 +59,12 @@ app.get("/poll", function(request, response) {
         {
             auth: "no",
             voted: "no",
-            poll: "Poll Name",
-            results: []
+            poll_name: "Poll Name",
+            poll_results: [["Elon Musk", "10"], ["Steve Jobs", "7"], ["Jeff Bezos", "3"]]
         }
    
+    
+    
     
     response.render("poll", data);
     
@@ -94,6 +96,16 @@ app.get("/newpoll", function(request, response) {
         };
     
     response.render("newpoll", data);
+    
+});
+
+
+app.get("/updatepoll", function(request, response) {
+    
+    console.log("poll has been updated");
+    
+    
+   response.redirect("/"); 
     
 });
 

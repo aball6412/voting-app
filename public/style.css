@@ -17,3 +17,13 @@ body {
     border: solid;
     margin: 10px;
 }
+
+
+.vote {
+    border: solid;
+}
+
+
+.result {
+    border: solid;
+}

@@ -39,9 +39,40 @@
                    </ul>
                  <% } %>
 
-
-
                 </div> <!-- end header -->
+            
+            
+            
+            <div class="main col-md-10 col-md-offset-1">
+                <h3 class="text-center">Check out the Results</h3>
+                
+                
+                <div class="row">
+                    
+                    <div class="vote col-md-4">
+                        <h3>Make your vote here</h3>
+                    </div>
+                    
+                    
+                    <div class="result col-md-8">
+                        <h3>Display poll result here</h3>
+                        
+                        <% for (var i in poll_results) { %>
+                        
+                        <p><%= poll_results[i][0] %>: <%= poll_results[i][1] %></p>
+                       
+                        
+                        
+                       <% } %>
+                        
+                        
+                    </div>
+                
+                
+                </div>
+                
+
+            </div> <!-- end main -->
         
         
         
