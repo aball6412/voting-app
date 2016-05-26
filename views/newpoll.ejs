@@ -1,8 +1,14 @@
 <html>
     
     <head>
+        
         <link href="style.css" type="text/css" rel="stylesheet" />
+        
+        <!-- JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
         <!-- Latest compiled and minified CSS -->
+        <!--  NEXT THREE ARE BOOTSTRAP -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
@@ -10,6 +16,70 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        
+        
+        
+        
+        <script>
+        $(document).ready(function (e) {
+            
+            var poll_options_list = [];
+            var counter = 1;
+            
+            
+            //Add a new poll option every time user clicks the "plus" button
+            $(".main").on("click", ".add_option", function() {
+                
+              $(".poll_option" + counter).after("<input type='text' class='form-control poll_option" + (counter+ 1) + "' placeholder='Option'>");
+                
+                counter++;
+            });
+            
+            
+            //Once the user hits "submit" then get the title and all elements in the poll_option fields
+            $(".submit").click(function() {
+                
+                //Get the title and set option variable
+                var title = document.getElementsByClassName("poll_title")[0].value;
+                var options = [];
+
+                //Get all of the poll fields
+                for (var i = 1; i <= counter; i++) {
+                    var item = document.getElementsByClassName("poll_option" + i)[0].value;
+                    options.push(item);
+                }
+
+                //Make a poll object to send to the server
+                //WILL NEED TO ADD USER ID ONCE FUNCTIONALITY IS AVAILABLE
+                var poll = {
+                    insert: "yes",
+                    title: title,
+                    options: options
+                };
+
+                //Send http request to server and get a data response
+                $.get("/updatepoll", poll, function(data) {
+                    
+                    $(".main").html("<h2>" + data + "</h2>")
+                    console.log("Response from Server: " + data);
+                    
+                });
+                
+               
+                
+            });
+            
+            
+            
+            
+        }); //End whole document
+        
+        
+        
+        
+        </script>
+        
+        
     </head>
     
     
@@ -43,9 +113,14 @@
         
         <div class="main col-md-8 col-md-offset-2">
                 <h3 class="text-center">Create a New Poll:</h3>
-               
+            
+                <input type="text" class="form-control poll_title" placeholder="Title">
+                <input type="text" class="form-control poll_option1" placeholder="Option">
+                <button type="button" class="btn btn-success add_option"><i class="glyphicon glyphicon-plus"></i></button>
+                <button type="button" class="btn btn-primary submit">Submit</button>
+                
 
-            </div> <!-- end main -->
+        </div> <!-- end main -->
           
           
           

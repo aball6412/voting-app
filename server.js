@@ -5,7 +5,7 @@ var MongoClient = mongodb.MongoClient;
 
 var port = process.env.PORT || 3000;
 
-//BE SURE TO MAKE DATABASE NAME VOTING_APP
+
 var dburl = process.env.MONGOLAB_URI || "mongodb://localhost:27017/voting_app";
 
 
@@ -102,10 +102,14 @@ app.get("/newpoll", function(request, response) {
 
 app.get("/updatepoll", function(request, response) {
     
+    
+    console.log(request.query.title);
+    console.log(request.query.options);
     console.log("poll has been updated");
     
     
-   response.redirect("/"); 
+   //response.redirect("/");
+    response.send("Your poll has been created");
     
 });
 
