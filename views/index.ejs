@@ -2,6 +2,11 @@
     
     <head>
         <link href="style.css" type="text/css" rel="stylesheet" />
+        
+        <!-- JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
+        <!-- NEXT THREE ARE BOOTSTRAP -->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -10,6 +15,28 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        
+        
+        
+        <script>
+            $(document).ready(function(e) {
+                
+                //If user clicks on new_poll button redirect them to that page
+                $(".new_poll").click(function() {
+                    window.location.href = "/newpoll";
+                });
+                
+                
+                
+                
+                
+                
+                
+            }); //End whole document
+            
+            
+        </script>
+        
     </head>
     
     
@@ -27,7 +54,7 @@
                <ul class="nav nav-pills">
                    <li role="presentation" class="active"> <a href="#">Home</a></li>
                    <li role="presentation"><a href="#">Profile</a></li>
-                   <li role="presentation"><a href="#">New Poll</a></li>
+                   <li role="presentation"><a href="/newpoll">New Poll</a></li>
                
                
                </ul>
@@ -43,10 +70,23 @@
                
             </div> <!-- end header -->
 
+            
+            
+            
+            
             <div class="main col-md-8 col-md-offset-2">
                 <h3 class="text-center">Check out the Polls Below and Cast your Vote!</h3>
+                <p class="text-center"><button type="button" class="btn btn-primary new_poll">Create New Poll</button></p>
                 <% for (var i in all_polls) { %>
-                <div class="plist"><%= all_polls[i] %></div>
+                
+                
+                <a href="/poll/<%= all_polls[i][1] %>">
+                    <div class="plist">
+                    <h4><%= all_polls[i][0] %></h4>
+                    </div>
+                </a>
+                
+                
                <% } %>
 
             </div>

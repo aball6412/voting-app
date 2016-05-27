@@ -2,6 +2,8 @@ var express = require("express");
 var app = express();
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
+var poll_collection;
+
 
 var port = process.env.PORT || 3000;
 
@@ -18,6 +20,7 @@ MongoClient.connect(dburl, function(err, db) {
         console.log("Successful connection to " + dburl);
     }
     //set db.collection variables for the various database collections
+    poll_collection = db.collection("polls");
     
 });
 
@@ -35,23 +38,42 @@ app.set("view engine", "ejs");
 
 app.get("/", function(request, response) {
     
-    // Variables needed, auth, user {name: }, polls []
-    //Do work
-    
-    var data = 
+    var all_polls = [];
+
+    //Get all of the polls in the database
+    var polls = poll_collection.find().toArray(function(err, documents) {
+        
+        if (err) throw err;
+        
+        //Get the title of each of those polls
+        for (var i in documents) {  
+            
+            var title = documents[i].title;
+            var id = documents[i]._id;
+            all_polls.push([title, id]); 
+        };
+        
+        console.log(all_polls);
+        
+        
+        
+        var data = 
         {
-            auth: "no",
-            user: { name: "Aaron" },
-            all_polls: ["test1", "test2", "test3", "test4", "test5"]
+            auth: "yes",
+            all_polls: all_polls,
         };
     
+        response.render("index", data);
+        
+        
+    }); //End of poll db query
 
-    response.render("index", data);
+
     
 });
 
 
-app.get("/poll", function(request, response) {
+app.get("/poll/:id", function(request, response) {
     
     //Do work
     
@@ -86,13 +108,16 @@ app.get("/user", function(request, response) {
 });
 
 
+
+
+
 app.get("/newpoll", function(request, response) {
     
     //Maybe build this in on top of other pages. Ex: a popup window where you can build the poll
     
     var data = 
         {
-            auth: "no",
+            auth: "yes",
         };
     
     response.render("newpoll", data);
@@ -100,16 +125,47 @@ app.get("/newpoll", function(request, response) {
 });
 
 
+
+
+
+
 app.get("/updatepoll", function(request, response) {
     
+    var insert = request.query.insert;
     
-    console.log(request.query.title);
-    console.log(request.query.options);
-    console.log("poll has been updated");
+    //If we are creating a new poll then do this...
+    if (insert === "yes") {
+        
+        var title = request.query.title;
+
+
+        //Get each option, put it in an object along with 0 votes ( since it's a newly created poll)
+        //Push that new object into options_and_votes list
+        var options = request.query.options;
+        var options_and_votes = [];
+
+        for (var i in options) {
+
+            var obj = {
+                option: options[i],
+                votes: 0
+            };
+
+            options_and_votes.push(obj);
+        } //End for
+
+
+            poll_collection.insert({
+                title: title,
+                options: options_and_votes
+            }); 
+
+            response.send("Your poll has been created");
+        
+    } //end if insert
     
     
-   //response.redirect("/");
-    response.send("Your poll has been created");
+
     
 });
 
