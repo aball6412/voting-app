@@ -1,7 +1,13 @@
 <html>
     
     <head>
-        <link href="style.css" type="text/css" rel="stylesheet" />
+        
+        <link href="/style.css" type="text/css" rel="stylesheet" />
+        
+        <!-- JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
+        <!-- THESE NEXT THREE ARE BOOTSTRAP -->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -10,6 +16,89 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        
+        
+        
+        <script>
+        $(document).ready(function() {
+            
+            //Have poll_id loaded from the server with the html response
+            var poll_id = "<%= poll_id %>";
+            
+            
+            //Figure out what option they selected for their vote
+            $(".option").click(function() {
+                
+                var vote = $(this)[0].innerText;
+                
+                //Put their vote into an object and send it to the server for processing
+                var my_vote = {
+                    my_vote: "yes",
+                    poll_id: poll_id,
+                    vote: vote
+                }
+                
+                $.get("/updatepoll", my_vote, function(data) {
+                    
+                    if (data === "Success") {
+                        
+                        $(".vote").html("<h3>Thank You For Voting</h3>");
+                        
+                    }
+                });
+                
+            }); //End option click
+            
+            
+            //If user clicks plus button give them one row to add an extra option
+            //And then give a submit button
+            var count = 1;
+            $(".add_option").click(function() {
+                
+                if (count <= 1) {
+                    $(".add_option").before("<input type='text' class='form-control custom_vote' placeholder='Create Option'>");
+                    
+                    $(".add_option").before("<button type='button' class='btn btn-success submit'>Submit</button>");
+                    
+                    $(".add_option").remove();
+                    count++;
+                }
+                
+            }); //End add option click
+
+            
+            $(".vote").on("click", ".submit", function() {
+                
+                var vote = document.getElementsByClassName("custom_vote")[0].value;
+                
+                var my_vote = {
+                    my_vote: "yes",
+                    poll_id: poll_id,
+                    vote: vote
+                }
+                    
+
+                
+                $.get("/updatepoll", my_vote, function(data) {
+                    
+                    if(data === "Success") {
+                        $(".vote").html("<h3>Thank You For Voting</h3>");
+                    }
+                    
+                }); //End get
+                
+            }); //End submit click
+            
+            
+            
+        }); //End whole document
+        
+        
+        
+        
+        
+        </script>
+        
     </head>
     
     
@@ -44,25 +133,37 @@
             
             
             <div class="main col-md-10 col-md-offset-1">
-                <h3 class="text-center">Check out the Results</h3>
+                <h2 class="text-center"><%= poll_name %></h2>
                 
                 
                 <div class="row">
                     
                     <div class="vote col-md-4">
-                        <h3>Make your vote here</h3>
+                        
+                        <h3 class="text-center"><ins>Vote</ins></h3>
+                        <% for (var j in poll_results) { %>
+    
+                            <button type="button" class="btn btn-primary btn-block option"><%= poll_results[j].option %></button>
+    
+                        <% } %>
+                        
+                        <button type="button" class="btn btn-success add_option"><i class="glyphicon glyphicon-plus"></i></button>
+                        
+                        
+                        
                     </div>
                     
                     
+                    
                     <div class="result col-md-8">
-                        <h3>Display poll result here</h3>
+                        
+                        <h3 class="text-center"><ins>Results</ins></h3>
                         
                         <% for (var i in poll_results) { %>
                         
-                        <p><%= poll_results[i][0] %>: <%= poll_results[i][1] %></p>
+                            <p class="text-center"><%= poll_results[i].option %>: <%= poll_results[i].votes %></p>
                        
-                        
-                        
+
                        <% } %>
                         
                         

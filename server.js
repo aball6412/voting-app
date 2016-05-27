@@ -2,13 +2,14 @@ var express = require("express");
 var app = express();
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
+var ObjectId = mongodb.ObjectId;
 var poll_collection;
 
 
+//Get the port and database URLs for production and development
 var port = process.env.PORT || 3000;
-
-
 var dburl = process.env.MONGOLAB_URI || "mongodb://localhost:27017/voting_app";
+
 
 
 MongoClient.connect(dburl, function(err, db) {
@@ -25,8 +26,10 @@ MongoClient.connect(dburl, function(err, db) {
 });
 
 
+
 //Serve up static files
 app.use("/", express.static(__dirname + "/public"));
+
 
 
 app.set("view engine", "ejs");
@@ -45,7 +48,7 @@ app.get("/", function(request, response) {
         
         if (err) throw err;
         
-        //Get the title of each of those polls
+        //Get the title and id of each of those polls and put them into all_polls list
         for (var i in documents) {  
             
             var title = documents[i].title;
@@ -53,10 +56,7 @@ app.get("/", function(request, response) {
             all_polls.push([title, id]); 
         };
         
-        console.log(all_polls);
-        
-        
-        
+        //Put title and id into data object and send it to client
         var data = 
         {
             auth: "yes",
@@ -70,27 +70,51 @@ app.get("/", function(request, response) {
 
 
     
-});
+}); 
+
+
+
+
+
 
 
 app.get("/poll/:id", function(request, response) {
-    
-    //Do work
-    
-    var data = 
+
+    var id = request.params.id;
+
+
+    poll_collection.find( {_id: new ObjectId(id) } ).toArray(function(err, documents) {
+        
+        var title = documents[0].title;
+        var options = documents[0].options;
+
+        var data = 
         {
-            auth: "no",
+            auth: "yes",
             voted: "no",
-            poll_name: "Poll Name",
-            poll_results: [["Elon Musk", "10"], ["Steve Jobs", "7"], ["Jeff Bezos", "3"]]
+            poll_id: id,
+            poll_name: title,
+            poll_results: options
         }
+        
+        response.render("poll", data);
+        
+        
+    }); //End database query
+    
+    
    
-    
-    
-    
-    response.render("poll", data);
-    
+  
 });
+
+
+
+
+
+
+
+
+
 
 
 app.get("/user", function(request, response) {
@@ -132,6 +156,8 @@ app.get("/newpoll", function(request, response) {
 app.get("/updatepoll", function(request, response) {
     
     var insert = request.query.insert;
+    var my_vote = request.query.my_vote;
+    
     
     //If we are creating a new poll then do this...
     if (insert === "yes") {
@@ -160,10 +186,16 @@ app.get("/updatepoll", function(request, response) {
                 options: options_and_votes
             }); 
 
-            response.send("Your poll has been created");
+            response.send("Success");
         
     } //end if insert
     
+    else if (my_vote === "yes") {
+        
+
+        response.send("Success");
+        
+    }
     
 
     

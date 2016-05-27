@@ -20,10 +20,11 @@ body {
 
 
 .vote {
-    border: solid;
+    margin-bottom: 15px;
 }
 
 
 .result {
-    border: solid;
+    border-left: solid;
+    margin-bottom: 15px;
 }
