@@ -192,7 +192,26 @@ app.get("/updatepoll", function(request, response) {
     
     else if (my_vote === "yes") {
         
+        //Get variables we need to query the database
+        var id = request.query.poll_id;
+        var vote = request.query.vote;
 
+        
+//        poll_collection.find({ _id: new ObjectId(id) }, { options: { $elemMatch: { option: vote } } }).toArray(function(err, documents) {
+//            
+//            if(err) throw err;
+//            
+//            console.log(documents[0].options);
+//            console.log(documents[0].options[0].votes);
+//            
+//            
+//        })
+        
+        poll_collection.find({ _id: new ObjectId(id) }, {_id: 0, options: {$elemMatch: {option: vote}}}).toArray(function(err, docs) {
+            
+            
+        });
+        
         response.send("Success");
         
     }
