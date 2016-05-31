@@ -155,7 +155,9 @@ app.get("/newpoll", function(request, response) {
 
 app.get("/updatepoll", function(request, response) {
     
+    //If adding a new poll then insert variable will say "yes"
     var insert = request.query.insert;
+    //If adding a vote then my_vote variable will say yes
     var my_vote = request.query.my_vote;
     
     
@@ -195,24 +197,55 @@ app.get("/updatepoll", function(request, response) {
         //Get variables we need to query the database
         var id = request.query.poll_id;
         var vote = request.query.vote;
+        
+        //Find out if option exits already or not
+        //If it does not exist then add the new option with votes of 1
+        //If it does exist then just add one vote to it
+        poll_collection.find(
+            { _id: new ObjectId(id), "options.option": vote },
+            
+            { _id: 0, title: 0 }
+        ).toArray(function(err, documents) {
+            
+            if(documents.length === 0) {
+                
+                var obj = 
+                    {
+                        option: vote,
+                        votes: 1
+                    }
+                
+                poll_collection.update(
+                    { _id: new ObjectId(id) },
+                    
+                    { $push: { options: obj } }
+                );
+                
+                response.send("Success");
+                
+            }//End if
+            
+            else {
+                
+                //If option already exists then add one vote to it
+                poll_collection.update(
+                    { _id: new ObjectId(id), "options.option": vote },
+            
+                    { $inc: { "options.$.votes": 1 } }
+                );
+                
+                response.send("Success");
+                
+            }//End else
+            
+        }); // End poll query
+  
 
         
-//        poll_collection.find({ _id: new ObjectId(id) }, { options: { $elemMatch: { option: vote } } }).toArray(function(err, documents) {
-//            
-//            if(err) throw err;
-//            
-//            console.log(documents[0].options);
-//            console.log(documents[0].options[0].votes);
-//            
-//            
-//        })
         
-        poll_collection.find({ _id: new ObjectId(id) }, {_id: 0, options: {$elemMatch: {option: vote}}}).toArray(function(err, docs) {
-            
-            
-        });
         
-        response.send("Success");
+      
+        
         
     }
     
