@@ -129,12 +129,14 @@ app.get("/", function(request, response) {
 
 app.get("/poll/:id", function(request, response) {
 
-    //Check to see if user is signed in or not
+    //Check to see if user is signed in or not. If yes then add user_id variable
     if (request.user) {
         auth = "yes";
+        var user_id = request.user;
     }
     else {
         auth = "no";
+        var user_id = "no user_id";
     }
     
     
@@ -146,12 +148,21 @@ app.get("/poll/:id", function(request, response) {
         
         var title = documents[0].title;
         var options = documents[0].options;
+        //If it's user's poll then set isMyPoll to yes. Otherwise, set to no
+        if (user_id === documents[0].user_id) {
+            var isMyPoll = "yes";   
+        }
+        else {
+            var isMyPoll = "no";
+        }
+        
 
         var data = 
         {
             auth: auth,
             voted: "no",
             poll_id: id,
+            isMyPoll: isMyPoll,
             poll_name: title,
             poll_results: options
         }
@@ -181,15 +192,34 @@ app.get("/user", function(request, response) {
     //Check to see if user is signed in or not
     if (request.user) {
         auth = "yes";
+        var user_id = request.user;
+        var mypolls = [];
         
-        var data = 
-        {
-            auth: auth,
-            mypolls: ["mypoll1", "mypoll2", "mypoll3", "mypoll4", "mypoll5", "mypoll6"]
-        };
+        
+       //Query database to get all of authorized user's polls
+        poll_collection.find({ user_id: user_id }).toArray(function(err, documents) {
+            
+            for (var i in documents) {
+                
+                var poll_id = documents[i]._id;
+                var poll_title = documents[i].title;
+                mypolls.push([poll_id, poll_title]);
+                
+            }
+            
+            var data = 
+                {
+                    auth: auth,
+                    mypolls: mypolls
+                };
+            
      
-        response.render("user", data);
-        
+            response.render("user", data);
+
+            
+            
+        }); //End database query
+         
     }
     else {
         auth = "no";
@@ -197,11 +227,8 @@ app.get("/user", function(request, response) {
         response.redirect("/");
     }
     
-    
-    
-     
-    
-});
+
+}); //End app.get("/user")
 
 
 
@@ -209,6 +236,7 @@ app.get("/user", function(request, response) {
 
 app.get("/newpoll", function(request, response) {
     
+
     //Check to see if user is signed in or not
     if (request.user) {
         
@@ -218,6 +246,7 @@ app.get("/newpoll", function(request, response) {
         var data = 
             {
                 auth: auth,
+                user_id: request.user
             };
     
         response.render("newpoll", data);
@@ -228,7 +257,7 @@ app.get("/newpoll", function(request, response) {
         response.redirect("/");
     }
     
-    //Maybe build this in on top of other pages. Ex: a popup window where you can build the poll
+ 
     
     
     
@@ -243,14 +272,17 @@ app.get("/updatepoll", function(request, response) {
     
     //If adding a new poll then insert variable will say "yes"
     var insert = request.query.insert;
-    //If adding a vote then my_vote variable will say yes
+    //If adding a vote then my_vote variable will say "yes"
     var my_vote = request.query.my_vote;
+    //If deleting a poll then delete_poll will say "yes"
+    var delete_poll = request.query.delete_poll;
     
     
     //If we are creating a new poll then do this...
     if (insert === "yes") {
         
         var title = request.query.title;
+        var user_id = request.query.user_id;
 
 
         //Get each option, put it in an object along with 0 votes ( since it's a newly created poll)
@@ -270,6 +302,7 @@ app.get("/updatepoll", function(request, response) {
 
 
             poll_collection.insert({
+                user_id: user_id,
                 title: title,
                 options: options_and_votes
             }); 
@@ -327,6 +360,20 @@ app.get("/updatepoll", function(request, response) {
         }); // End poll query
   
     } //End else if my_vote
+    
+    
+    
+    else if (delete_poll === "yes") {
+        
+        //Get the poll_id
+        var id = request.query.poll_id;
+        
+        //Query the database to delete poll
+        poll_collection.remove({ _id: new ObjectId(id) });
+        
+        response.send("Success");
+        
+    } //End else if delete_poll
     
 
     

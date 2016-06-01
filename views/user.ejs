@@ -2,6 +2,11 @@
     
     <head>
         <link href="style.css" type="text/css" rel="stylesheet" />
+        
+        <!-- JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
+        <!-- NEXT THREE ARE BOOTSTRAP -->
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -10,6 +15,29 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        
+        
+        <script>
+            $(document).ready(function(e) {
+                
+                $(".delete").click(function() {
+                    
+                    var test = $(this);
+                    console.log(test);
+                    
+                });
+                
+                
+                
+                
+                
+                
+            }); //End whole document
+            
+            
+        </script>
+        
+        
     </head>
     
      
@@ -22,8 +50,8 @@
                
                <% if (auth === "yes") { %>
                <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="/">Home</a></li>
-                   <li role="presentation"><a href="/user">Profile</a></li>
+                   <li role="presentation"> <a href="/">Home</a></li>
+                   <li role="presentation" class="active"><a href="/user">Profile</a></li>
                    <li role="presentation"><a href="/newpoll">New Poll</a></li>
                    <li role="presentation"><a href="/logout">Logout</a></li>
                
@@ -44,9 +72,25 @@
         
             <div class="main col-md-8 col-md-offset-2">
                 <h3 class="text-center">Polls Created:</h3>
+                
+
                 <% for (var i in mypolls) { %>
-                <div class="plist"><%= mypolls[i] %></div>
+                
+
+                    
+                    
+                    <a href="/poll/<%= mypolls[i][0] %>">
+                        <div class="plist">
+                            <h4><%= mypolls[i][1] %></h4>
+                        </div>
+                    </a>
+                    
+                    
+                
+                
+                
                <% } %>
+
 
             </div>
         

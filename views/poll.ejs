@@ -91,6 +91,28 @@
             
             
             
+            $(".delete").click(function() {
+                           
+                var data = 
+                    {
+                        delete_poll: "yes",
+                        poll_id: poll_id
+                    }
+                
+                $.get("/updatepoll", data, function(data) {
+                    
+                    if (data === "Success") {
+                        
+                        window.location.href = "/"; 
+                        
+                    }
+
+                }); //End .get
+                
+            }); //End delete click
+            
+            
+            
         }); //End whole document
         
         
@@ -168,8 +190,11 @@
                         <% for (var i in poll_results) { %>
                         
                             <p class="text-center"><%= poll_results[i].option %>: <%= poll_results[i].votes %></p>
-                       
 
+                       <% } %>
+                        
+                       <% if (isMyPoll === "yes") { %>
+                            <button type="button" class="btn btn-danger btn-block delete">Delete</button>
                        <% } %>
                         
                         

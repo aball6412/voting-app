@@ -18,6 +18,10 @@ body {
     margin: 10px;
 }
 
+.delete_button {
+    border: solid;
+}
+
 
 .vote {
     margin-bottom: 15px;
