@@ -2,11 +2,13 @@ var express = require("express");
 var app = express();
 var passport = require("passport");
 var Strategy = require("passport-twitter").Strategy;
+var bodyparser = require("body-parser");
+var cookieparser = require("cookie-parser");
 var mongodb = require("mongodb");
 var MongoClient = mongodb.MongoClient;
 var ObjectId = mongodb.ObjectId;
 var poll_collection;
-
+var auth;
 
 
 //Get the port and database URLs for production and development
@@ -29,6 +31,9 @@ MongoClient.connect(dburl, function(err, db) {
 });
 
 
+
+
+//Set up passport Twitter Strategy
 passport.use(new Strategy(
     {
         consumerKey: process.env.CONSUMER_KEY,
@@ -37,25 +42,24 @@ passport.use(new Strategy(
     },
     function(token, tokenSecret, profile, cb) {
         
-        console.log("made it to login");
-        console.log(profile);
         return cb(null, profile);
     }
 ));
 
 
 
-
+//Serialize and deserialize user information
 passport.serializeUser(function(user, cb) {
-    
     cb(null, user.id);
 });
 
 passport.deserializeUser(function(obj, cb) {
-    
     cb(null, obj);
 });
 
+//Add all of the middlewares needed for passport to work correctly
+app.use(bodyparser.urlencoded({extended: false}));
+app.use(cookieparser());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,10 +80,14 @@ app.set("view engine", "ejs");
 
 app.get("/", function(request, response) {
     
-    console.log(request.user);
+    //Check to see if user is signed in or not
     if (request.user) {
-        console.log(request.user.displayName);
+        auth = "yes";
     }
+    else {
+        auth = "no";
+    }
+    
     
     
     var all_polls = [];
@@ -100,7 +108,7 @@ app.get("/", function(request, response) {
         //Put title and id into data object and send it to client
         var data = 
         {
-            auth: "no",
+            auth: auth,
             all_polls: all_polls,
         };
     
@@ -121,10 +129,15 @@ app.get("/", function(request, response) {
 
 app.get("/poll/:id", function(request, response) {
 
-    console.log(request.user);
-    if(request.user) {
-        console.log(request.user.name);
+    //Check to see if user is signed in or not
+    if (request.user) {
+        auth = "yes";
     }
+    else {
+        auth = "no";
+    }
+    
+    
     
     var id = request.params.id;
 
@@ -136,7 +149,7 @@ app.get("/poll/:id", function(request, response) {
 
         var data = 
         {
-            auth: "no",
+            auth: auth,
             voted: "no",
             poll_id: id,
             poll_name: title,
@@ -165,15 +178,28 @@ app.get("/poll/:id", function(request, response) {
 
 app.get("/user", function(request, response) {
     
-   //Do work
-    
-     var data = 
+    //Check to see if user is signed in or not
+    if (request.user) {
+        auth = "yes";
+        
+        var data = 
         {
-            auth: "no",
+            auth: auth,
             mypolls: ["mypoll1", "mypoll2", "mypoll3", "mypoll4", "mypoll5", "mypoll6"]
         };
      
-    response.render("user", data);
+        response.render("user", data);
+        
+    }
+    else {
+        auth = "no";
+        
+        response.redirect("/");
+    }
+    
+    
+    
+     
     
 });
 
@@ -183,14 +209,28 @@ app.get("/user", function(request, response) {
 
 app.get("/newpoll", function(request, response) {
     
+    //Check to see if user is signed in or not
+    if (request.user) {
+        
+        auth = "yes";
+        
+        
+        var data = 
+            {
+                auth: auth,
+            };
+    
+        response.render("newpoll", data);
+    }
+    else {
+        auth = "no";
+        
+        response.redirect("/");
+    }
+    
     //Maybe build this in on top of other pages. Ex: a popup window where you can build the poll
     
-    var data = 
-        {
-            auth: "no",
-        };
     
-    response.render("newpoll", data);
     
 });
 
@@ -294,15 +334,22 @@ app.get("/updatepoll", function(request, response) {
 
 
 
-app.get("/login/twitter", passport.authenticate("twitter"), function(request, response) {
-    
-    console.log("login request received");
+
+
+//Start authentication process for a login request
+app.get("/login/twitter", passport.authenticate("twitter"));
+
+//Get a success or fail result from the request and redirect to homepage
+app.get("/login/twitter/return", passport.authenticate("twitter", { failureRedirect: "/" }), function(request, response) {
+    response.redirect("/"); 
 });
 
-app.get("/login/twitter/return", passport.authenticate("twitter", { failureRedirect: "/" }), function(request, response) {
-    
+
+//End a session by logging out (destroy session cookie) and redirecting to homepage
+app.get("/logout", function(request, response) {
+    console.log("Logging out");
+    request.logout();
     response.redirect("/");
-    
 });
 
 

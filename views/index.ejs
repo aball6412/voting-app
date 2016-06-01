@@ -52,16 +52,17 @@
                
                <% if (auth === "yes") { %>
                <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="#">Home</a></li>
-                   <li role="presentation"><a href="#">Profile</a></li>
+                   <li role="presentation" class="active"> <a href="/">Home</a></li>
+                   <li role="presentation"><a href="/user">Profile</a></li>
                    <li role="presentation"><a href="/newpoll">New Poll</a></li>
+                   <li role="presentation"><a href="/logout">Logout</a></li>
                
                
                </ul>
               <% } else { %>
                
                <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="#">Home</a></li>
+                   <li role="presentation" class="active"> <a href="/">Home</a></li>
                    <li role="presentation"><a href="/login/twitter">Login</a></li>
                </ul>
              <% } %>
@@ -76,7 +77,12 @@
             
             <div class="main col-md-8 col-md-offset-2">
                 <h3 class="text-center">Check out the Polls Below and Cast your Vote!</h3>
+                
+                <% if (auth === "yes") { %>
                 <p class="text-center"><button type="button" class="btn btn-primary new_poll">Create New Poll</button></p>
+                
+                <% } %>
+                
                 <% for (var i in all_polls) { %>
                 
                 
