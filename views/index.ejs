@@ -1,7 +1,6 @@
 <html>
     
     <head>
-        <link href="style.css" type="text/css" rel="stylesheet" />
         
         <!-- JQUERY -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -17,6 +16,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         
         
+        <link href="style.css" type="text/css" rel="stylesheet" />
+        
         
         <script>
             $(document).ready(function(e) {
@@ -26,11 +27,7 @@
                     window.location.href = "/newpoll";
                 });
                 
-                
-                
-                
-                
-                
+ 
                 
             }); //End whole document
             
@@ -46,37 +43,43 @@
           
             
             
-            
-           <div class="header col-md-8 col-md-offset-2">
-               <h1 class="text-center">Free Code Camp Voting App</h1>
-               
-               <% if (auth === "yes") { %>
-               <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="/">Home</a></li>
-                   <li role="presentation"><a href="/user">Profile</a></li>
-                   <li role="presentation"><a href="/newpoll">New Poll</a></li>
-                   <li role="presentation"><a href="/logout">Logout</a></li>
-               
-               
-               </ul>
-              <% } else { %>
-               
-               <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="/">Home</a></li>
-                   <li role="presentation"><a href="/login/twitter">Login</a></li>
-               </ul>
-             <% } %>
 
+           <div class="header">
+               
+               <div class="title col-md-6">
+               <h1 class="text-center">Free Code Camp Voting App</h1>
+               </div>
+               
+               
+               
+               <div class="menubar col-md-6">
+                   
+                   <% if (auth === "yes") { %>
+                   <ul class="nav nav-pills usernav">
+                       <li role="presentation"> <a href="/">Home</a></li>
+                       <li role="presentation"><a href="/user">Profile</a></li>
+                       <li role="presentation"><a href="/newpoll">New Poll</a></li>
+                       <li role="presentation"><a href="/logout">Logout</a></li>
+                   </ul>
+                  <% } else { %>
+
+                   <ul class="nav nav-pills usernav">
+                       <li role="presentation"> <a href="/">Home</a></li>
+                       <li role="presentation"><a href="/login/twitter">Login</a></li>
+                   </ul>
+                 <% } %>
+                   
+               </div> <!-- end menubar -->
                
                
             </div> <!-- end header -->
 
-            
+
             
             
             
             <div class="main col-md-8 col-md-offset-2">
-                <h3 class="text-center">Check out the Polls Below and Cast your Vote!</h3>
+                <h3 class="text-center">Check out the Polls Below and Cast your Vote!</h3><br />
                 
                 <% if (auth === "yes") { %>
                 <p class="text-center"><button type="button" class="btn btn-primary new_poll">Create New Poll</button></p>
@@ -88,14 +91,14 @@
                 
                 <a href="/poll/<%= all_polls[i][1] %>">
                     <div class="plist">
-                    <h4><%= all_polls[i][0] %></h4>
+                    <h4 class="text-center"><%= all_polls[i][0] %></h4>
                     </div>
                 </a>
                 
                 
                <% } %>
 
-            </div>
+            </div> <!-- end main -->
     
     
         </div> <!-- end fluid container -->

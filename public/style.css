@@ -1,29 +1,91 @@
-body {
-
-
+/******* DOCUMENT LEVEL CSS ********/
+.container-fluid {
+    padding: 0;
 }
+
+body {
+    background: #F6F8F8;
+}
+
+
+
+/******* HEADER CSS ********/
+h1 {
+    margin: 5px;
+}
+
 
 .header {
+    background: #2B2E3B;
     border: solid;
-    margin: 25px;
+    color: #74B1BE;
+    border-color: black;
+    border-width: 1px;
+    height: 75px;
+
 }
 
+.title {
+    
+}
+
+.menubar {
+  
+    padding-top: 10px;
+    padding-left: 175px;
+}
+
+.usernav li a {
+    color: #74B1BE;
+}
+
+.usernav li a:hover {
+    color: #95D9E8;
+    background: #2B2E3B;
+}
+
+
+
+
+/******* MAIN SECTION CSS ********/
+
 .main {
-    border: solid;
-    margin: 25px;
+    color: #8D91A8;
+
 }
 
 .plist {
     border: solid;
-    margin: 10px;
+    border-width: 1px;
+    border-color: #E0E5E6;
+    background: #D1D9DB;
+    color: #587D84;
+    /*background: #464D72;
+    color: #C0C4D8;*/
+
 }
 
-.delete_button {
-    border: solid;
+.plist a {
+    color: #587D84;
 }
 
+.main a {
+    text-decoration: none;
+}
+
+
+
+/******* NEW POLL SECTION CSS ********/
+.add_option, .submit {
+    margin-top: 5px;
+}
+
+
+/******* VIEW POLL SECTION CSS ********/
 
 .vote {
+
+    padding-right: 25px;
     margin-bottom: 15px;
 }
 
@@ -32,3 +94,24 @@ body {
     border-left: solid;
     margin-bottom: 15px;
 }
+
+
+
+/******* USER SECTION CSS ********/
+
+.userdel {
+    
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+

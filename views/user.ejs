@@ -1,7 +1,6 @@
 <html>
     
     <head>
-        <link href="style.css" type="text/css" rel="stylesheet" />
         
         <!-- JQUERY -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -17,15 +16,30 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         
         
+        <link href="style.css" type="text/css" rel="stylesheet" />
+        
+        
         <script>
             $(document).ready(function(e) {
                 
                 $(".delete").click(function() {
                     
-                    var test = $(this);
-                    console.log(test);
+                    var poll_id = $(this)[0].dataset.internalid;
                     
-                });
+                    var data = 
+                        {
+                            delete_poll: "yes",
+                            poll_id: poll_id
+                        }
+                    
+                    $.get("/updatepoll", data, function(data) {
+                        
+                        if (data === "Success") {
+                            window.location.href = "/user";
+                        } 
+                    }); //End .get
+                    
+                }); //End delete click
                 
                 
                 
@@ -45,45 +59,61 @@
         
         <div class="container-fluid">
         
-            <div class="header col-md-8 col-md-offset-2">
+            
+            
+            <div class="header">
+               
+               <div class="title col-md-6">
                <h1 class="text-center">Free Code Camp Voting App</h1>
-               
-               <% if (auth === "yes") { %>
-               <ul class="nav nav-pills">
-                   <li role="presentation"> <a href="/">Home</a></li>
-                   <li role="presentation" class="active"><a href="/user">Profile</a></li>
-                   <li role="presentation"><a href="/newpoll">New Poll</a></li>
-                   <li role="presentation"><a href="/logout">Logout</a></li>
+               </div>
                
                
-               </ul>
-              <% } else { %>
                
-               <ul class="nav nav-pills">
-                   <li role="presentation" class="active"> <a href="/">Home</a></li>
-                   <li role="presentation"><a href="/login/twitter">Login</a></li>
-               </ul>
-             <% } %>
+               <div class="menubar col-md-6">
+                   
+                   <% if (auth === "yes") { %>
+                   <ul class="nav nav-pills usernav">
+                       <li role="presentation"> <a href="/">Home</a></li>
+                       <li role="presentation"><a href="/user">Profile</a></li>
+                       <li role="presentation"><a href="/newpoll">New Poll</a></li>
+                       <li role="presentation"><a href="/logout">Logout</a></li>
+                   </ul>
+                  <% } else { %>
 
+                   <ul class="nav nav-pills usernav">
+                       <li role="presentation"> <a href="/">Home</a></li>
+                       <li role="presentation"><a href="/login/twitter">Login</a></li>
+                   </ul>
+                 <% } %>
+                   
+               </div> <!-- end menubar -->
                
                
             </div> <!-- end header -->
         
         
             <div class="main col-md-8 col-md-offset-2">
-                <h3 class="text-center">Polls Created:</h3>
+                <h3 class="text-center">Polls Created:</h3><br />
                 
 
                 <% for (var i in mypolls) { %>
                 
 
                     
-                    
-                    <a href="/poll/<%= mypolls[i][0] %>">
-                        <div class="plist">
-                            <h4><%= mypolls[i][1] %></h4>
-                        </div>
-                    </a>
+                  <div class="row">
+                      
+                      <div class="plist col-md-10">
+                            <a href="/poll/<%= mypolls[i][0] %>">
+                                <h4 class="text-center"><%= mypolls[i][1] %></h4> 
+                            </a>
+                      </div>
+                      
+                      
+                      <div class="col-md-2 userdel">
+                      <button type="button" class="btn btn-danger delete" data-internalid="<%= mypolls[i][0] %>">Delete</button>
+                      </div>
+                      
+                  </div> <!-- end row -->
                     
                     
                 
