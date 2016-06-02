@@ -9,6 +9,7 @@ var MongoClient = mongodb.MongoClient;
 var ObjectId = mongodb.ObjectId;
 var poll_collection;
 var auth;
+var username;
 
 
 //Get the port and database URLs for production and development
@@ -51,10 +52,12 @@ passport.use(new Strategy(
 //Serialize and deserialize user information
 passport.serializeUser(function(user, cb) {
     cb(null, user.id);
+
 });
 
 passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
+
 });
 
 //Add all of the middlewares needed for passport to work correctly
@@ -80,9 +83,11 @@ app.set("view engine", "ejs");
 
 app.get("/", function(request, response) {
     
+ 
     //Check to see if user is signed in or not
     if (request.user) {
         auth = "yes";
+        var user_id = request.user;
     }
     else {
         auth = "no";
@@ -110,6 +115,7 @@ app.get("/", function(request, response) {
         {
             auth: auth,
             all_polls: all_polls,
+            user_id: user_id
         };
     
         response.render("index", data);
@@ -160,6 +166,7 @@ app.get("/poll/:id", function(request, response) {
         var data = 
         {
             auth: auth,
+            user_id: user_id,
             voted: "no",
             poll_id: id,
             isMyPoll: isMyPoll,
@@ -210,7 +217,8 @@ app.get("/user", function(request, response) {
             var data = 
                 {
                     auth: auth,
-                    mypolls: mypolls
+                    mypolls: mypolls,
+                    user_id: user_id
                 };
             
      
@@ -241,6 +249,7 @@ app.get("/newpoll", function(request, response) {
     if (request.user) {
         
         auth = "yes";
+        var user_id = request.user;
         
         
         var data = 

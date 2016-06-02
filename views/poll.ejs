@@ -45,11 +45,9 @@
                 $.get("/updatepoll", my_vote, function(data) {
                     
                     if (data === "Success") {
-                        
-                        $(".vote").html("<h3>Thank You For Voting</h3>");
-                        
+                        document.location.href = "/poll/" + poll_id; 
                     }
-                });
+                }); //End .get
                 
             }); //End option click
             
@@ -81,18 +79,37 @@
                     vote: vote
                 }
                     
+                if (vote != "") {
 
+                    $.get("/updatepoll", my_vote, function(data) {
+
+                        if(data === "Success") {
+                            document.location.href = "/poll/" + poll_id;
+                        }
+
+                    }); //End get
+                    
+                } //End if
                 
-                $.get("/updatepoll", my_vote, function(data) {
+                else {
                     
-                    if(data === "Success") {
-                        $(".vote").html("<h3>Thank You For Voting</h3>");
-                    }
-                    
-                }); //End get
+                    $(".vote").append("<br /><br /><p style='color: red;'>Please enter an option.</p>");
+                }
+               
+                
                 
             }); //End submit click
             
+            
+            
+            $(".share").click(function() {
+                
+                var message = "I created a poll! Click here to check it out: ";
+                var link = "http://localhost:3000/poll/" + poll_id;
+                window.location.href = "https://twitter.com/intent/tweet?text=" + message + link;
+                
+                
+            });
             
             
             $(".delete").click(function() {
@@ -106,9 +123,7 @@
                 $.get("/updatepoll", data, function(data) {
                     
                     if (data === "Success") {
-                        
                         window.location.href = "/"; 
-                        
                     }
 
                 }); //End .get
@@ -207,7 +222,6 @@
                                     votes.push("<%= poll_results[a].votes %>");
                                     <% } %>
 
-                                   console.log(labels); 
 
                                 //Template used by chart.js documentation
                                 var ctx = document.getElementById("myChart");
@@ -253,6 +267,7 @@
                         <! -- END OF THE CHART.JS SECTION -->
                         
                        <% if (isMyPoll === "yes") { %>
+                            <button type="button" class="btn btn-success btn-block share">Share</button>
                             <button type="button" class="btn btn-danger btn-block delete">Delete</button>
                        <% } %>
                         

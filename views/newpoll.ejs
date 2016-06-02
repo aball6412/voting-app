@@ -46,26 +46,33 @@
                 //Get all of the poll fields
                 for (var i = 1; i <= counter; i++) {
                     var item = document.getElementsByClassName("poll_option" + i)[0].value;
-                    options.push(item);
+                    if (item !== "") {
+                        options.push(item);
+                    }
                 }
-
-                //Make a poll object to send to the server
-                //WILL NEED TO ADD USER ID ONCE FUNCTIONALITY IS AVAILABLE
-                var poll = {
-                    insert: "yes",
-                    user_id: <%= user_id %>,
-                    title: title,
-                    options: options
-                };
-
-                //Send http request to server and get a data response
-                $.get("/updatepoll", poll, function(data) {
-                    
-                    $(".main").html("<h2>" + data + "</h2>")
-                    console.log("Response from Server: " + data);
-                    
-                });
                 
+                
+                //Make sure both title and option was entered
+                if (options.length > 0 && title != "") {
+                    
+                    //Make a poll object to send to the server
+                    var poll = {
+                        insert: "yes",
+                        user_id: <%= user_id %>,
+                        title: title,
+                        options: options
+                    };
+
+                    //Send http request to server and get a data response
+                    $.get("/updatepoll", poll, function(data) {    
+                        document.location.href = "/user"; 
+                    }); //End get
+                
+                } //End if
+                
+                else {
+                    $(".main").append("<br /><br /><p style='color: red;'>Please enter both a title and at least one option.</p>");
+                }
                
                 
             });
