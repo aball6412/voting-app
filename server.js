@@ -39,12 +39,13 @@ passport.use(new Strategy(
     {
         consumerKey: process.env.CONSUMER_KEY,
         consumerSecret: process.env.CONSUMER_SECRET,
-        //callbackURL: "http://localhost:3000/login/twitter/return" <-----DEVELOPMENT LOCAL URL
+        //callbackURL: "http://localhost:3000/login/twitter/return" //<-----DEVELOPMENT LOCAL URL
         callbackURL: "https://vote-app.herokuapp.com/login/twitter/return"
     },
     function(token, tokenSecret, profile, cb) {
         
         return cb(null, profile);
+        //Get user_id and username and save both to db if I want to use username later.
     }
 ));
 
@@ -58,6 +59,7 @@ passport.serializeUser(function(user, cb) {
 
 passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
+    //To add username I'd get obj back with the user_id and then query database where I'd have username saved.
 
 });
 
