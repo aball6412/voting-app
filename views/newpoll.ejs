@@ -37,6 +37,7 @@
             
             
             //Once the user hits "submit" then get the title and all elements in the poll_option fields
+            var submit_counter = 0;
             $(".submit").click(function() {
                 
                 //Get the title and set option variable
@@ -71,7 +72,10 @@
                 } //End if
                 
                 else {
-                    $(".main").append("<br /><br /><p style='color: red;'>Please enter both a title and at least one option.</p>");
+                    submit_counter++;
+                    if(submit_counter <= 1) {
+                        $(".main").append("<br /><br /><p style='color: red;'>Please enter both a title and at least one option.</p>");
+                    }
                 }
                
                 

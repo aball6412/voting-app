@@ -68,6 +68,9 @@
                 
             }); //End add option click
 
+            //Submit custom choice if user selects to
+            //Display error if no choice is made
+            var submit_count = 0;
             
             $(".vote").on("click", ".submit", function() {
                 
@@ -92,8 +95,10 @@
                 } //End if
                 
                 else {
-                    
-                    $(".vote").append("<br /><br /><p style='color: red;'>Please enter an option.</p>");
+                    submit_count++;
+                    if (submit_count <= 1) {
+                        $(".vote").append("<br /><br /><p class='error' style='color: red;'>Please enter an option.</p>");
+                    }
                 }
                
                 

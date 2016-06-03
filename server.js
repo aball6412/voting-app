@@ -39,7 +39,8 @@ passport.use(new Strategy(
     {
         consumerKey: process.env.CONSUMER_KEY,
         consumerSecret: process.env.CONSUMER_SECRET,
-        callbackURL: "http://localhost:3000/login/twitter/return"
+        //callbackURL: "http://localhost:3000/login/twitter/return" <-----DEVELOPMENT LOCAL URL
+        callbackURL: "https://vote-app.herokuapp.com/login/twitter/return"
     },
     function(token, tokenSecret, profile, cb) {
         
